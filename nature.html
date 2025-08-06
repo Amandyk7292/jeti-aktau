@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> За городом - Актау | JETI MEIRAMHANA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'jeti-brown': '#7A4E1D',
+                        'jeti-beige': '#F5F1E8',
+                        'jeti-sand': '#E6D7C3',
+                        'jeti-blue': '#1E3A8A',
+                        'jeti-light-brown': '#A67C52'
+                    },
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+        .place-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        .place-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .place-image {
+            width: 100%;
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: relative;
+        }
+        .place-favorite {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 36px;
+            height: 36px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .place-favorite:hover {
+            background: white;
+            transform: scale(1.1);
+        }
+        .place-content {
+            padding: 20px;
+        }
+        .place-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 8px;
+        }
+        .place-description {
+            color: #6b7280;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 16px;
+        }
+        .place-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .btn-map-location {
+            color: #7A4E1D;
+            font-size: 0.875rem;
+            font-weight: 500;
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn-map-location:hover {
+            border-bottom-color: #7A4E1D;
+            transform: translateX(2px);
+        }
+        .map-icon {
+            width: 16px;
+            height: 16px;
+            background: linear-gradient(135deg, #3B82F6, #1E40AF);
+            border-radius: 50% 50% 50% 0;
+            position: relative;
+            transform: rotate(-45deg);
+            transition: all 0.2s ease;
+        }
+        .map-icon::after {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 10px;
+            height: 10px;
+            background: white;
+            border-radius: 50%;
+        }
+        .btn-map-location:hover .map-icon {
+            transform: rotate(-45deg) scale(1.1);
+        }
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #E6D7C3;
+        }
+        .btn-map {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            background-color: #7A4E1D;
+            color: white;
+            text-decoration: none;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        .btn-map:hover {
+            background-color: #A67C52;
+            transform: scale(1.05);
+        }
+        .navbar-blur {
+            backdrop-filter: blur(10px);
+            background-color: rgba(245, 241, 232, 0.9);
+        }
+        
+        /* Logo styles */
+        .logo-img {
+            height: 2.5rem;
+            width: auto;
+            transition: transform 0.2s ease;
+        }
+        
+        .logo-img:hover {
+            transform: scale(1.05);
+        }
+        
+        @media (max-width: 768px) {
+            .logo-img {
+                height: 2rem;
+            }
+        }
+    </style>
+</head>
+<body class="font-inter bg-jeti-beige text-gray-800" data-page="nature">
+    <!-- Navigation will be loaded here -->
+    <div id="navbar-container"></div>
+
+    <!-- Hero Section -->
+    <section class="pt-20 pb-16 bg-gradient-to-br from-green-600 via-teal-700 to-blue-800 text-white relative overflow-hidden">
+        <div class="absolute inset-0 bg-black opacity-20"></div>
+        <div class="absolute inset-0" style="background-image: url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'); background-size: cover; background-position: center; opacity: 0.3;"></div>
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div class="max-w-4xl mx-auto">
+                <div class="text-6xl mb-6 animate-pulse">⛰️</div>
+                <h1 class="text-5xl md:text-6xl font-bold mb-6">За городом</h1>
+                <p class="text-xl md:text-2xl opacity-90 max-w-3xl mx-auto">
+                    Откройте для себя невероятные чудеса Мангистау и активные приключения за пределами города
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        
+        <!-- ТОП-6 ЧУДЕС МАНГИСТАУ -->
+        <section class="mb-16">
+            <div class="section-header">
+                <h2 class="text-3xl font-bold text-jeti-brown">⛰️ ТОП-6 ЧУДЕС МАНГИСТАУ</h2>
+                <a href="#" class="btn-map">
+                    <div class="map-icon"></div>
+                    Посмотреть на карте
+                </a>
+            </div>
+            <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
+                
+                <!-- Бозжыра -->
+                <div class="place-card">
+                    <div class="place-image" style="background-image: url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');">
+                        <div class="place-favorite">
+                            <svg width="20" height="18" viewBox="0 0 20 18" fill="none">
+                                <path d="M10 16.5C9.7 16.5 9.4 16.4 9.2 16.2C8.9 15.9 2 9.5 2 5.5C2 2.4 4.4 0 7.5 0C8.7 0 9.8 0.5 10.5 1.3C11.2 0.5 12.3 0 13.5 0C16.6 0 19 2.4 19 5.5C19 9.5 12.1 15.9 10.8 16.2C10.6 16.4 10.3 16.5 10 16.5Z" fill="#CBD5E1"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="place-content">
+                        <h3 class="place-title">Бозжыра</h3>
+                        <p class="place-description">Самая масштабная и впечатляющая достопримечательность всего Мангистау. Фантастические пейзажи и уникальные геологические формации в 270 км от Актау.</p>
+                        <div class="place-actions">
+                            <a href="#" class="btn-map-location">
+                                <div class="map-icon"></div>
+                                Посмотреть на карте
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Подземная мечеть Шакпак-ата -->
+                <div class="place-card">
+                    <div class="place-image" style="background-image: url('https://images.unsplash.com/photo-1549558549-415fe4c37b60?ixlib=rb-4.0.3&auto=format&fit=crop&w=2076&q=80');">
+                        <div class="place-favorite">
+                            <svg width="20" height="18" viewBox="0 0 20 18" fill="none">
+                                <path d="M10 16.5C9.7 16.5 9.4 16.4 9.2 16.2C8.9 15.9 2 9.5 2 5.5C2 2.4 4.4 0 7.5 0C8.7 0 9.8 0.5 10.5 1.3C11.2 0.5 12.3 0 13.5 0C16.6 0 19 2.4 19 5.5C19 9.5 12.1 15.9 10.8 16.2C10.6 16.4 10.3 16.5 10 16.5Z" fill="#CBD5E1"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="place-content">
+                        <h3 class="place-title">Подземная мечеть Шакпак-ата</h3>
+                        <p class="place-description">Один из важнейших религиозных памятников Мангистау. Уникальная подземная мечеть, высеченная в скале, находится в 85 км от Актау.</p>
+                        <div class="place-actions">
+                            <a href="#" class="btn-map-location">
+                                <div class="map-icon"></div>
+                                Посмотреть на карте
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Солончак Тузбаир -->
+                <div class="place-card">
+                    <div class="place-image" style="background-image: url('https://images.unsplash.com/photo-1439066615861-d1af74d74000?ixlib=rb-4.0.3&auto=format&fit=crop&w=2106&q=80');">
+                        <div class="place-favorite">
+                            <svg width="20" height="18" viewBox="0 0 20 18" fill="none">
+                                <path d="M10 16.5C9.7 16.5 9.4 16.4 9.2 16.2C8.9 15.9 2 9.5 2 5.5C2 2.4 4.4 0 7.5 0C8.7 0 9.8 0.5 10.5 1.3C11.2 0.5 12.3 0 13.5 0C16.6 0 19 2.4 19 5.5C19 9.5 12.1 15.9 10.8 16.2C10.6 16.4 10.3 16.5 10 16.5Z" fill="#CBD5E1"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="place-content">
+                        <h3 class="place-title">Солончак Тузбаир</h3>
+                        <p class="place-description">Одна из самых фотогеничных достопримечательностей Мангистау. Белоснежные соляные равнины создают невероятные пейзажи в 230 км от Актау.</p>
+                        <div class="place-actions">
+                            <a href="#" class="btn-map-location">
+                                <div class="map-icon"></div>
+                                Посмотреть на карте
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Голубая бухта -->
+                <div class="place-card">
+                    <div class="place-image" style="background-image: url('https://images.unsplash.com/photo-1544551763-46a013bb70d5?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');">
+                        <div class="place-favorite">
+                            <svg width="20" height="18" viewBox="0 0 20 18" fill="none">
+                                <path d="M10 16.5C9.7 16.5 9.4 16.4 9.2 16.2C8.9 15.9 2 9.5 2 5.5C2 2.4 4.4 0 7.5 0C8.7 0 9.8 0.5 10.5 1.3C11.2 0.5 12.3 0 13.5 0C16.6 0 19 2.4 19 5.5C19 9.5 12.1 15.9 10.8 16.2C10.6 16.4 10.3 16.5 10 16.5Z" fill="#CBD5E1"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="place-content">
+                        <h3 class="place-title">Голубая бухта</h3>
+                        <p class="place-description">Казахстанские Мальдивы! Невероятно красивая бухта с кристально чистой водой и живописными скалами. Идеальное место для отдыха и фотосессий.</p>
+                        <div class="place-actions">
+                            <a href="#" class="btn-map-location">
+                                <div class="map-icon"></div>
+                                Посмотреть на карте
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ыбыкты -->
+                <div class="place-card">
+                    <div class="place-image" style="background-image: url('https://images.unsplash.com/photo-1464822759844-d150baec4874?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');">
+                        <div class="place-favorite">
+                            <svg width="20" height="18" viewBox="0 0 20 18" fill="none">
+                                <path d="M10 16.5C9.7 16.5 9.4 16.4 9.2 16.2C8.9 15.9 2 9.5 2 5.5C2 2.4 4.4 0 7.5 0C8.7 0 9.8 0.5 10.5 1.3C11.2 0.5 12.3 0 13.5 0C16.6 0 19 2.4 19 5.5C19 9.5 12.1 15.9 10.8 16.2C10.6 16.4 10.3 16.5 10 16.5Z" fill="#CBD5E1"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="place-content">
+                        <h3 class="place-title">Ыбыкты</h3>
+                        <p class="place-description">Небольшая, но невероятно красивая природная достопримечательность Мангистау. Живописные скальные образования всего в 60 км от Актау.</p>
+                        <div class="place-actions">
+                            <a href="#" class="btn-map-location">
+                                <div class="map-icon"></div>
+                                Посмотреть на карте
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Долина Замков Айракты -->
+                <div class="place-card">
+                    <div class="place-image" style="background-image: url('https://images.unsplash.com/photo-1520637736862-4d197d17c50a?ixlib=rb-4.0.3&auto=format&fit=crop&w=2072&q=80');">
+                        <div class="place-favorite">
+                            <svg width="20" height="18" viewBox="0 0 20 18" fill="none">
+                                <path d="M10 16.5C9.7 16.5 9.4 16.4 9.2 16.2C8.9 15.9 2 9.5 2 5.5C2 2.4 4.4 0 7.5 0C8.7 0 9.8 0.5 10.5 1.3C11.2 0.5 12.3 0 13.5 0C16.6 0 19 2.4 19 5.5C19 9.5 12.1 15.9 10.8 16.2C10.6 16.4 10.3 16.5 10 16.5Z" fill="#CBD5E1"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="place-content">
+                        <h3 class="place-title">Долина Замков Айракты</h3>
+                        <p class="place-description">Мистическая долина с уникальными скальными образованиями, напоминающими древние замки. Захватывающие пейзажи в 180 км от Актау.</p>
+                        <div class="place-actions">
+                            <a href="#" class="btn-map-location">
+                                <div class="map-icon"></div>
+                                Посмотреть на карте
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Джип-туры -->
+            <div class="mt-12 bg-gradient-to-r from-amber-50 to-orange-50 rounded-xl p-6 shadow-lg">
+                <h3 class="text-xl font-bold text-jeti-brown mb-4">🚙 Джип-туры по Мангистау</h3>
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div class="bg-white p-4 rounded-lg shadow-sm">
+                        <div class="font-semibold text-gray-800">Mangystau Safari</div>
+                        <a href="tel:+77003626044" class="text-blue-600 hover:text-blue-800 transition-colors">+7 700 362 60 44</a>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg shadow-sm">
+                        <div class="font-semibold text-gray-800">Kettik Mangystau</div>
+                        <a href="tel:+77073624140" class="text-blue-600 hover:text-blue-800 transition-colors">+7 707 362 41 40</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- АКТИВНЫЙ ОТДЫХ -->
+        <section class="mb-16">
+            <div class="section-header">
+                <h2 class="text-3xl font-bold text-jeti-brown">🔥 АКТИВНЫЙ ОТДЫХ</h2>
+                <a href="#" class="btn-map">
+                    <div class="map-icon"></div>
+                    Посмотреть на карте
+                </a>
+            </div>
+            <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
+                
+                <!-- Квадроциклы -->
+                <div class="place-card">
+                    <div class="place-image" style="background-image: url('https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');">
+                        <div class="place-favorite">
+                            <svg width="20" height="18" viewBox="0 0 20 18" fill="none">
+                                <path d="M10 16.5C9.7 16.5 9.4 16.4 9.2 16.2C8.9 15.9 2 9.5 2 5.5C2 2.4 4.4 0 7.5 0C8.7 0 9.8 0.5 10.5 1.3C11.2 0.5 12.3 0 13.5 0C16.6 0 19 2.4 19 5.5C19 9.5 12.1 15.9 10.8 16.2C10.6 16.4 10.3 16.5 10 16.5Z" fill="#CBD5E1"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="place-content">
+                        <h3 class="place-title">Квадроциклы</h3>
+                        <p class="place-description">Экстремальные покатушки на квадроциклах по живописным местам Актау. Адреналин и незабываемые впечатления гарантированы! +7 708 954 14 05</p>
+                        <div class="place-actions">
+                            <a href="tel:+77089541405" class="btn-map-location">
+                                <div class="map-icon"></div>
+                                Посмотреть на карте
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Верховая езда -->
+                <div class="place-card">
+                    <div class="place-image" style="background-image: url('https://images.unsplash.com/photo-1553062407-98eeb64c6a62?ixlib=rb-4.0.3&auto=format&fit=crop&w=2076&q=80');">
+                        <div class="place-favorite">
+                            <svg width="20" height="18" viewBox="0 0 20 18" fill="none">
+                                <path d="M10 16.5C9.7 16.5 9.4 16.4 9.2 16.2C8.9 15.9 2 9.5 2 5.5C2 2.4 4.4 0 7.5 0C8.7 0 9.8 0.5 10.5 1.3C11.2 0.5 12.3 0 13.5 0C16.6 0 19 2.4 19 5.5C19 9.5 12.1 15.9 10.8 16.2C10.6 16.4 10.3 16.5 10 16.5Z" fill="#CBD5E1"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="place-content">
+                        <h3 class="place-title">Верховая езда</h3>
+                        <p class="place-description">Романтические прогулки верхом на лошадях по степным просторам. Идеальный способ насладиться природой Мангистау. +7 775 479 53 90</p>
+                        <div class="place-actions">
+                            <a href="tel:+77754795390" class="btn-map-location">
+                                <div class="map-icon"></div>
+                                Посмотреть на карте
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Стрельба из лука -->
+                <div class="place-card">
+                    <div class="place-image" style="background-image: url('https://images.unsplash.com/photo-1518611012118-696072aa579a?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');">
+                        <div class="place-favorite">
+                            <svg width="20" height="18" viewBox="0 0 20 18" fill="none">
+                                <path d="M10 16.5C9.7 16.5 9.4 16.4 9.2 16.2C8.9 15.9 2 9.5 2 5.5C2 2.4 4.4 0 7.5 0C8.7 0 9.8 0.5 10.5 1.3C11.2 0.5 12.3 0 13.5 0C16.6 0 19 2.4 19 5.5C19 9.5 12.1 15.9 10.8 16.2C10.6 16.4 10.3 16.5 10 16.5Z" fill="#CBD5E1"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="place-content">
+                        <h3 class="place-title">Стрельба из лука</h3>
+                        <p class="place-description">Изучите древнее искусство стрельбы из лука в современном тире. Концентрация, точность и спортивный азарт в одном месте. +7 775 422 26 38</p>
+                        <div class="place-actions">
+                            <a href="tel:+77754222638" class="btn-map-location">
+                                <div class="map-icon"></div>
+                                Посмотреть на карте
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Пейнтбол -->
+                <div class="place-card">
+                    <div class="place-image" style="background-image: url('https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');">
+                        <div class="place-favorite">
+                            <svg width="20" height="18" viewBox="0 0 20 18" fill="none">
+                                <path d="M10 16.5C9.7 16.5 9.4 16.4 9.2 16.2C8.9 15.9 2 9.5 2 5.5C2 2.4 4.4 0 7.5 0C8.7 0 9.8 0.5 10.5 1.3C11.2 0.5 12.3 0 13.5 0C16.6 0 19 2.4 19 5.5C19 9.5 12.1 15.9 10.8 16.2C10.6 16.4 10.3 16.5 10 16.5Z" fill="#CBD5E1"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="place-content">
+                        <h3 class="place-title">Пейнтбол</h3>
+                        <p class="place-description">Командные сражения в пейнтбол с друзьями и коллегами. Тактика, стратегия и максимум адреналина в безопасной обстановке. +7 747 647 01 46</p>
+                        <div class="place-actions">
+                            <a href="tel:+77476470146" class="btn-map-location">
+                                <div class="map-icon"></div>
+                                Посмотреть на карте
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Сапборд -->
+                <div class="place-card">
+                    <div class="place-image" style="background-image: url('https://images.unsplash.com/photo-1530549387789-4c1017266635?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');">
+                        <div class="place-favorite">
+                            <svg width="20" height="18" viewBox="0 0 20 18" fill="none">
+                                <path d="M10 16.5C9.7 16.5 9.4 16.4 9.2 16.2C8.9 15.9 2 9.5 2 5.5C2 2.4 4.4 0 7.5 0C8.7 0 9.8 0.5 10.5 1.3C11.2 0.5 12.3 0 13.5 0C16.6 0 19 2.4 19 5.5C19 9.5 12.1 15.9 10.8 16.2C10.6 16.4 10.3 16.5 10 16.5Z" fill="#CBD5E1"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="place-content">
+                        <h3 class="place-title">Сапборд</h3>
+                        <p class="place-description">Серфинг с веслом по акватории Каспийского моря. Освойте новый водный вид спорта в живописной обстановке. Яхт-клуб Бриз | +7 702 614 92 95</p>
+                        <div class="place-actions">
+                            <a href="tel:+77026149295" class="btn-map-location">
+                                <div class="map-icon"></div>
+                                Посмотреть на карте
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-jeti-brown text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-3 gap-8">
+                <div>
+                    <h3 class="text-2xl font-bold mb-4">JETI</h3>
+                    <p class="opacity-90">Ваш путеводитель по Актау</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Контакты</h4>
+                    <p class="opacity-90">📍 30 мкр, 181</p>
+                    <p class="opacity-90">📞 +7 701 934 44 24</p>
+                    <p class="opacity-90">📧 jeti@aktau.kz</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Следите за нами</h4>
+                    <p class="opacity-90">📱 @jeti_aktau</p>
+                    <p class="opacity-90">#visitaktau #onlyinaktau</p>
+                </div>
+            </div>
+            <div class="border-t border-jeti-light-brown mt-8 pt-8 text-center opacity-75">
+                <p>&copy; 2024 JETI. Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="navbar-loader.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Куда сходить с детьми в Актау | JETI Туристический буклет</title>
+    <meta name="description" content="Лучшие места для отдыха с детьми в Актау и окрестностях - парки, аквапарки, развлекательные центры">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --jeti-brown: #8B4513;
+            --jeti-light-brown: #D2B48C;
+            --jeti-sand: #F4E4BC;
+            --jeti-beige: #F5F5DC;
+        }
+        
+        .text-jeti-brown { color: var(--jeti-brown); }
+        .bg-jeti-brown { background-color: var(--jeti-brown); }
+        .text-jeti-light-brown { color: var(--jeti-light-brown); }
+        .bg-jeti-light-brown { background-color: var(--jeti-light-brown); }
+        .text-jeti-sand { color: var(--jeti-sand); }
+        .bg-jeti-sand { background-color: var(--jeti-sand); }
+        .bg-jeti-beige { background-color: var(--jeti-beige); }
+        .hover\\:text-jeti-sand:hover { color: var(--jeti-sand); }
+        .hover\\:text-jeti-light-brown:hover { color: var(--jeti-light-brown); }
+
+        .place-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        .place-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .place-image {
+            width: 100%;
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: relative;
+        }
+        .place-favorite {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 36px;
+            height: 36px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .place-favorite:hover {
+            background: white;
+            transform: scale(1.1);
+        }
+        .place-content {
+            padding: 20px;
+        }
+        .place-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 8px;
+        }
+        .place-description {
+            color: #6b7280;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 16px;
+        }
+        .place-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .btn-map-location {
+            color: #7A4E1D;
+            font-size: 0.875rem;
+            font-weight: 500;
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn-map-location:hover {
+            border-bottom-color: #7A4E1D;
+            transform: translateX(2px);
+        }
+        .map-icon {
+            width: 16px;
+            height: 16px;
+            background: linear-gradient(135deg, #3B82F6, #1E40AF);
+            border-radius: 50% 50% 50% 0;
+            position: relative;
+            transform: rotate(-45deg);
+            transition: all 0.2s ease;
+        }
+        .map-icon::after {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 10px;
+            height: 10px;
+            background: white;
+            border-radius: 50%;
+        }
+        .btn-map-location:hover .map-icon {
+            transform: rotate(-45deg) scale(1.1);
+        }
+
+        .section-header {
+            @apply flex justify-between items-center mb-8 pb-4 border-b-2;
+            border-color: var(--jeti-sand);
+        }
+
+        .btn-map {
+            @apply inline-flex items-center space-x-2 px-6 py-3 rounded-full text-sm font-semibold transition-all duration-200;
+            @apply bg-jeti-brown text-white hover:bg-jeti-light-brown hover:scale-105 shadow-lg;
+        }
+
+        .hero-kids {
+            background: linear-gradient(135deg, #FF6B6B 0%, #4ECDC4 50%, #45B7D1 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-kids::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">🎈</text></svg>') 20px 20px,
+                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">⭐</text></svg>') 60px 60px,
+                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">🎯</text></svg>') 0px 100px;
+            background-size: 100px 100px;
+            opacity: 0.1;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+        
+        /* Logo styles */
+        .logo-img {
+            height: 2.5rem;
+            width: auto;
+            transition: transform 0.2s ease;
+        }
+        
+        .logo-img:hover {
+            transform: scale(1.05);
+        }
+        
+        @media (max-width: 768px) {
+            .logo-img {
+                height: 2rem;
+            }
+        }
+
+        .navbar-blur {
+            backdrop-filter: blur(10px);
+            background-color: rgba(245, 241, 232, 0.9);
+        }
+
+    </style>
+</head>
+<body class="bg-jeti-beige min-h-screen" data-page="kids">
+    <!-- Navigation will be loaded here -->
+    <div id="navbar-container"></div>
+
+    <!-- Hero Section -->
+    <section class="hero-kids text-white pt-20 pb-20">
+        <div class="max-w-4xl mx-auto text-center px-4">
+            <div class="text-6xl mb-6 animate-bounce">🎈</div>
+            <h1 class="text-5xl font-bold mb-6">Куда сходить с детьми</h1>
+            <p class="text-xl opacity-90 max-w-2xl mx-auto">
+                Лучшие места для семейного отдыха в Актау и окрестностях. 
+                Развлечения, которые понравятся и детям, и взрослым!
+            </p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        
+        <!-- В городе -->
+        <section class="mb-16">
+            <div class="section-header">
+                <h2 class="text-3xl font-bold text-jeti-brown">В городе - Детские развлечения</h2>
+                <a href="#" class="btn-map">
+                    <div class="map-icon"></div>
+                    Посмотреть на карте
+                </a>
+            </div>
+            <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
+                
+                <!-- Страус-ферма -->
+                <div class="place-card">
+                    <div class="place-image" style="background-image: url('https://images.unsplash.com/photo-1551698618-1dfe5d97d256?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');">
+                        <div class="place-favorite">
+                            <svg width="20" height="18" viewBox="0 0 20 18" fill="none">
+                                <path d="M10 16.5C9.7 16.5 9.4 16.4 9.2 16.2C8.9 15.9 2 9.5 2 5.5C2 2.4 4.4 0 7.5 0C8.7 0 9.8 0.5 10.5 1.3C11.2 0.5 12.3 0 13.5 0C16.6 0 19 2.4 19 5.5C19 9.5 12.1 15.9 10.8 16.2C10.6 16.4 10.3 16.5 10 16.5Z" fill="#CBD5E1"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="place-content">
+                        <h3 class="place-title">Страус-ферма</h3>
+                        <p class="place-description">Уникальная возможность познакомиться с экзотическими птицами, покормить страусов и узнать много интересного о их жизни. Промзона 6 | +7 701 743 53 06</p>
+                        <div class="place-actions">
+                            <a href="tel:+77017435306" class="btn-map-location">
+                                <div class="map-icon"></div>
+                                Посмотреть на карте
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- My Kids -->
+                <div class="place-card">
+                    <div class="place-image" style="background-image: url('https://images.unsplash.com/photo-1587654780291-39c9404d746b?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');">
+                        <div class="place-favorite">
+                            <svg width="20" height="18" viewBox="0 0 20 18" fill="none">
+                                <path d="M10 16.5C9.7 16.5 9.4 16.4 9.2 16.2C8.9 15.9 2 9.5 2 5.5C2 2.4 4.4 0 7.5 0C8.7 0 9.8 0.5 10.5 1.3C11.2 0.5 12.3 0 13.5 0C16.6 0 19 2.4 19 5.5C19 9.5 12.1 15.9 10.8 16.2C10.6 16.4 10.3 16.5 10 16.5Z" fill="#CBD5E1"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="place-content">
+                        <h3 class="place-title">My Kids</h3>
+                        <p class="place-description">Современный детский развлекательный центр с безопасными аттракционами, игровыми зонами и кафе для всей семьи. ТРК «Актау», 16 мкр | +7 708 058 04 72</p>
+                        <div class="place-actions">
+                            <a href="tel:+77080580472" class="btn-map-location">
+                                <div class="map-icon"></div>
+                                Посмотреть на карте
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Kids Park -->
+                <div class="place-card">
+                    <div class="place-image" style="background-image: url('https://images.unsplash.com/photo-1560472354-b33ff0c44a43?ixlib=rb-4.0.3&auto=format&fit=crop&w=2126&q=80');">
+                        <div class="place-favorite">
+                            <svg width="20" height="18" viewBox="0 0 20 18" fill="none">
+                                <path d="M10 16.5C9.7 16.5 9.4 16.4 9.2 16.2C8.9 15.9 2 9.5 2 5.5C2 2.4 4.4 0 7.5 0C8.7 0 9.8 0.5 10.5 1.3C11.2 0.5 12.3 0 13.5 0C16.6 0 19 2.4 19 5.5C19 9.5 12.1 15.9 10.8 16.2C10.6 16.4 10.3 16.5 10 16.5Z" fill="#CBD5E1"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="place-content">
+                        <h3 class="place-title">Kids Park</h3>
+                        <p class="place-description">Игровой парк с разнообразными активностями для детей разных возрастов. Безопасное и яркое пространство для веселого времяпрепровождения. БЦ Urban, 17 мкр | +7 700 659 05 68</p>
+                        <div class="place-actions">
+                            <a href="tel:+77006590568" class="btn-map-location">
+                                <div class="map-icon"></div>
+                                Посмотреть на карте
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Парк аттракционов Сказка -->
+                <div class="place-card">
+                    <div class="place-image" style="background-image: url('https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');">
+                        <div class="place-favorite">
+                            <svg width="20" height="18" viewBox="0 0 20 18" fill="none">
+                                <path d="M10 16.5C9.7 16.5 9.4 16.4 9.2 16.2C8.9 15.9 2 9.5 2 5.5C2 2.4 4.4 0 7.5 0C8.7 0 9.8 0.5 10.5 1.3C11.2 0.5 12.3 0 13.5 0C16.6 0 19 2.4 19 5.5C19 9.5 12.1 15.9 10.8 16.2C10.6 16.4 10.3 16.5 10 16.5Z" fill="#CBD5E1"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="place-content">
+                        <h3 class="place-title">Парк аттракционов Сказка</h3>
+                        <p class="place-description">Волшебный мир аттракционов для маленьких мечтателей. Карусели, качели и множество других развлечений в сказочной атмосфере. 5а мкр | +7 702 593 00 00</p>
+                        <div class="place-actions">
+                            <a href="tel:+77025930000" class="btn-map-location">
+                                <div class="map-icon"></div>
+                                Посмотреть на карте
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Парк Ақбота -->
+                <div class="place-card">
+                    <div class="place-image" style="background-image: url('https://images.unsplash.com/photo-1529440680-93a03150460d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');">
+                        <div class="place-favorite">
+                            <svg width="20" height="18" viewBox="0 0 20 18" fill="none">
+                                <path d="M10 16.5C9.7 16.5 9.4 16.4 9.2 16.2C8.9 15.9 2 9.5 2 5.5C2 2.4 4.4 0 7.5 0C8.7 0 9.8 0.5 10.5 1.3C11.2 0.5 12.3 0 13.5 0C16.6 0 19 2.4 19 5.5C19 9.5 12.1 15.9 10.8 16.2C10.6 16.4 10.3 16.5 10 16.5Z" fill="#CBD5E1"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="place-content">
+                        <h3 class="place-title">Парк Ақбота</h3>
+                        <p class="place-description">Популярный городской парк с аттракционами и игровыми автоматами. Отличное место для прогулок и активного отдыха всей семьей. 4а мкр</p>
+                        <div class="place-actions">
+                            <a href="#" class="btn-map-location">
+                                <div class="map-icon"></div>
+                                Посмотреть на карте
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Аквапарк Laguna -->
+                <div class="place-card">
+                    <div class="place-image" style="background-image: url('https://images.unsplash.com/photo-1571902943202-507ec2618e8f?ixlib=rb-4.0.3&auto=format&fit=crop&w=2075&q=80');">
+                        <div class="place-favorite">
+                            <svg width="20" height="18" viewBox="0 0 20 18" fill="none">
+                                <path d="M10 16.5C9.7 16.5 9.4 16.4 9.2 16.2C8.9 15.9 2 9.5 2 5.5C2 2.4 4.4 0 7.5 0C8.7 0 9.8 0.5 10.5 1.3C11.2 0.5 12.3 0 13.5 0C16.6 0 19 2.4 19 5.5C19 9.5 12.1 15.9 10.8 16.2C10.6 16.4 10.3 16.5 10 16.5Z" fill="#CBD5E1"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="place-content">
+                        <h3 class="place-title">Аквапарк Laguna</h3>
+                        <p class="place-description">Современный аквапарк с горками, бассейнами и водными развлечениями для всех возрастов. Идеальное место для освежающего отдыха. Самал 2 | +7 705 555 28 28</p>
+                        <div class="place-actions">
+                            <a href="tel:+77055552828" class="btn-map-location">
+                                <div class="map-icon"></div>
+                                Посмотреть на карте
+                            </a>
+                </div>
+            </div>
+                </div>
+                
+            </div>
+
+            <!-- Открытые бассейны -->
+            <div class="mt-8 bg-white rounded-xl p-6 shadow-lg">
+                <h3 class="text-xl font-bold text-jeti-brown mb-4">🏊‍♀️ Открытые бассейны</h3>
+                <div class="grid md:grid-cols-3 gap-4 text-sm">
+                    <div class="bg-blue-50 p-4 rounded-lg">
+                        <div class="font-semibold text-blue-800">16 мкр</div>
+                        <div class="text-gray-600">ТРК Актау</div>
+                    </div>
+                    <div class="bg-blue-50 p-4 rounded-lg">
+                        <div class="font-semibold text-blue-800">1 мкр</div>
+                        <div class="text-gray-600">санаторий Шагала</div>
+                    </div>
+                    <div class="bg-blue-50 p-4 rounded-lg">
+                        <div class="font-semibold text-blue-800">9 мкр</div>
+                        <div class="text-gray-600">отель Ренессанс Sulo</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-jeti-brown text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-3 gap-8">
+                <div>
+                    <h3 class="text-2xl font-bold mb-4">JETI</h3>
+                    <p class="opacity-90">Ваш путеводитель по Актау</p>
+                    </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Контакты</h4>
+                    <p class="opacity-90">📍 30 мкр, 181</p>
+                    <p class="opacity-90">📞 +7 701 934 44 24</p>
+                    <p class="opacity-90">📧 jeti@aktau.kz</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Следите за нами</h4>
+                    <p class="opacity-90">📱 @jeti_aktau</p>
+                    <p class="opacity-90">#visitaktau #onlyinaktau</p>
+                </div>
+            </div>
+            <div class="border-t border-jeti-light-brown mt-8 pt-8 text-center opacity-75">
+                <p>&copy; 2024 JETI. Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="navbar-loader.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

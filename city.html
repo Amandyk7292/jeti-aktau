@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>В городе - Актау | JETI MEIRAMHANA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'jeti-brown': '#7A4E1D',
+                        'jeti-beige': '#F5F1E8',
+                        'jeti-sand': '#E6D7C3',
+                        'jeti-blue': '#1E3A8A',
+                        'jeti-light-brown': '#A67C52'
+                    },
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+        .card-hover:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 25px 35px -5px rgba(122, 78, 29, 0.15), 0 15px 15px -5px rgba(122, 78, 29, 0.08);
+            z-index: 10;
+        }
+        .place-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        .place-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .place-image {
+            width: 100%;
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: relative;
+        }
+        .place-favorite {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 36px;
+            height: 36px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .place-favorite:hover {
+            background: white;
+            transform: scale(1.1);
+        }
+        .place-content {
+            padding: 20px;
+        }
+        .place-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 8px;
+        }
+        .place-description {
+            color: #6b7280;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 16px;
+        }
+        .place-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .btn-map-location {
+            color: #7A4E1D;
+            font-size: 0.875rem;
+            font-weight: 500;
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn-map-location:hover {
+            border-bottom-color: #7A4E1D;
+            transform: translateX(2px);
+        }
+        .map-icon {
+            width: 16px;
+            height: 16px;
+            background: linear-gradient(135deg, #3B82F6, #1E40AF);
+            border-radius: 50% 50% 50% 0;
+            position: relative;
+            transform: rotate(-45deg);
+            transition: all 0.2s ease;
+        }
+        .map-icon::after {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: white;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .btn-map-location:hover .map-icon {
+            transform: rotate(-45deg) scale(1.1);
+            background: linear-gradient(135deg, #EF4444, #DC2626);
+        }
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        .btn-map {
+            background: #7A4E1D;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-map:hover {
+            background: #A67C52;
+            transform: translateY(-1px);
+        }
+        .btn-map .map-icon {
+            background: rgba(255, 255, 255, 0.9);
+        }
+        .btn-map .map-icon::after {
+            background: #7A4E1D;
+        }
+        .btn-map:hover .map-icon {
+            background: white;
+            transform: rotate(-45deg) scale(1.1);
+        }
+        .btn-map:hover .map-icon::after {
+            background: #A67C52;
+        }
+        .navbar-blur {
+            backdrop-filter: blur(10px);
+            background-color: rgba(245, 241, 232, 0.9);
+        }
+        
+        /* Logo styles */
+        .logo-img {
+            height: 2.5rem;
+            width: auto;
+            transition: transform 0.2s ease;
+        }
+        
+        .logo-img:hover {
+            transform: scale(1.05);
+        }
+        
+        @media (max-width: 768px) {
+            .logo-img {
+                height: 2rem;
+            }
+        }
+        .kazakh-phrases {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            color: white;
+            padding: 3rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+        .kazakh-phrases::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="50" font-size="60" opacity="0.1" fill="white">💬</text></svg>') repeat;
+            animation: float 20s infinite linear;
+        }
+        @keyframes float {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-100px); }
+        }
+        .phrase-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            position: relative;
+            z-index: 2;
+        }
+        .phrase-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+        .phrase-card:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+        .phrase-ru {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            opacity: 0.9;
+        }
+        .phrase-kz {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #fbbf24;
+        }
+    </style>
+</head>
+<body class="font-inter bg-jeti-beige text-gray-800" data-page="city">
+    <!-- Navigation will be loaded here -->
+    <div id="navbar-container"></div>
+
+    <!-- Hero Section -->
+    <section class="pt-20 pb-16 bg-gradient-to-br from-jeti-beige via-jeti-sand to-jeti-beige">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <h1 class="text-4xl md:text-6xl font-bold text-jeti-brown mb-4">
+                    В городе
+                </h1>
+                <p class="text-xl md:text-2xl text-gray-700 mb-8">
+                    Лучшие места для отдыха и развлечений в Актау
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        
+        <!-- Пляжи -->
+        <section class="mb-16">
+            <div class="section-header">
+                <h2 class="text-3xl font-bold text-jeti-brown">🏖️ Пляжи Актау</h2>
+                <a href="#" class="btn-map">
+                    <div class="map-icon"></div>
+                    Посмотреть на карте
+                </a>
+            </div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="place-card">
+                    <div class="place-image" style="background-image: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2073&q=80');">
+                        <div class="place-favorite">
+                            <svg width="20" height="18" viewBox="0 0 20 18" fill="none">
+                                <path d="M10 16.5C9.7 16.5 9.4 16.4 9.2 16.2C8.9 15.9 2 9.5 2 5.5C2 2.4 4.4 0 7.5 0C8.7 0 9.8 0.5 10.5 1.3C11.2 0.5 12.3 0 13.5 0C16.6 0 19 2.4 19 5.5C19 9.5 12.1 15.9 10.8 16.2C10.6 16.4 10.3 16.5 10 16.5Z" fill="#CBD5E1"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="place-content">
+                        <h3 class="place-title">Пляж Маракеш</h3>
+                        <p class="place-description">Один из лучших пляжей в черте города, расположенный в 1 микрорайоне. Идеальное место для семейного отдыха с чистым песком и развитой инфраструктурой для комфортного времяпровождения.</p>
+                        <div class="place-actions">
+                            <a href="#" class="btn-map-location">
+                                <div class="map-icon"></div>
+                                Посмотреть на карте
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="place-card">
+                    <div class="place-image" style="background-image: url('https://images.unsplash.com/photo-1544551763-46a013bb70d5?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');">
+                        <div class="place-favorite">
+                            <svg width="20" height="18" viewBox="0 0 20 18" fill="none">
+                                <path d="M10 16.5C9.7 16.5 9.4 16.4 9.2 16.2C8.9 15.9 2 9.5 2 5.5C2 2.4 4.4 0 7.5 0C8.7 0 9.8 0.5 10.5 1.3C11.2 0.5 12.3 0 13.5 0C16.6 0 19 2.4 19 5.5C19 9.5 12.1 15.9 10.8 16.2C10.6 16.4 10.3 16.5 10 16.5Z" fill="#CBD5E1"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="place-content">
+                        <h3 class="place-title">Пляж Достар</h3>
+                        <p class="place-description">Популярный городской пляж в 1 микрорайоне с отличной инфраструктурой. Здесь можно провести весь день, наслаждаясь солнцем, морем и удобствами современного пляжного отдыха.</p>
+                        <div class="place-actions">
+                            <a href="#" class="btn-map-location">
+                                <div class="map-icon"></div>
+                                Посмотреть на карте
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="place-card">
+                    <div class="place-image" style="background-image: url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');">
+                        <div class="place-favorite">
+                            <svg width="20" height="18" viewBox="0 0 20 18" fill="none">
+                                <path d="M10 16.5C9.7 16.5 9.4 16.4 9.2 16.2C8.9 15.9 2 9.5 2 5.5C2 2.4 4.4 0 7.5 0C8.7 0 9.8 0.5 10.5 1.3C11.2 0.5 12.3 0 13.5 0C16.6 0 19 2.4 19 5.5C19 9.5 12.1 15.9 10.8 16.2C10.6 16.4 10.3 16.5 10 16.5Z" fill="#CBD5E1"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="place-content">
+                        <h3 class="place-title">Набережная</h3>
+                        <p class="place-description">Прекрасное место для прогулок в 15 микрорайоне. Красивая набережная протяженностью несколько километров с видами на Каспийское море, идеальная для вечерних прогулок и фотосессий.</p>
+                        <div class="place-actions">
+                            <a href="#" class="btn-map-location">
+                                <div class="map-icon"></div>
+                                Посмотреть на карте
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Рестораны -->
+        <section class="mb-16">
+            <div class="section-header">
+                <h2 class="text-3xl font-bold text-jeti-brown">🍽️ Рестораны и кафе</h2>
+                <a href="#" class="btn-map">
+                    <div class="map-icon"></div>
+                    Посмотреть на карте
+                </a>
+            </div>
+            <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
+                <!-- JETI Featured -->
+                <div class="place-card">
+                    <div class="place-image" style="background-image: url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');">
+                        <div class="place-favorite">
+                            <svg width="20" height="18" viewBox="0 0 20 18" fill="none">
+                                <path d="M10 16.5C9.7 16.5 9.4 16.4 9.2 16.2C8.9 15.9 2 9.5 2 5.5C2 2.4 4.4 0 7.5 0C8.7 0 9.8 0.5 10.5 1.3C11.2 0.5 12.3 0 13.5 0C16.6 0 19 2.4 19 5.5C19 9.5 12.1 15.9 10.8 16.2C10.6 16.4 10.3 16.5 10 16.5Z" fill="#CBD5E1"/>
+                            </svg>
+                        </div>
+                        <div style="position: absolute; top: 12px; left: 12px; background: #7A4E1D; color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">⭐ СКИДКА 10%</div>
+                    </div>
+                    <div class="place-content">
+                        <h3 class="place-title">JETI</h3>
+                        <p class="place-description">Казахская и авторская кухня в уютной атмосфере. Свежие морепродукты, локальные блюда и панорамный вид на море. 30 мкр, 181 | +7 701 934 44 24</p>
+                        <div class="place-actions">
+                            <a href="tel:+77019344424" class="btn-map-location">
+                                <div class="map-icon"></div>
+                                Посмотреть на карте
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="place-card">
+                    <div class="place-image" style="background-image: url('https://images.unsplash.com/photo-1555396273-367ea4eb4db5?ixlib=rb-4.0.3&auto=format&fit=crop&w=2074&q=80');">
+                        <div class="place-favorite">
+                            <svg width="20" height="18" viewBox="0 0 20 18" fill="none">
+                                <path d="M10 16.5C9.7 16.5 9.4 16.4 9.2 16.2C8.9 15.9 2 9.5 2 5.5C2 2.4 4.4 0 7.5 0C8.7 0 9.8 0.5 10.5 1.3C11.2 0.5 12.3 0 13.5 0C16.6 0 19 2.4 19 5.5C19 9.5 12.1 15.9 10.8 16.2C10.6 16.4 10.3 16.5 10 16.5Z" fill="#CBD5E1"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="place-content">
+                        <h3 class="place-title">Бархан</h3>
+                        <p class="place-description">Самые вкусные бургеры в Актау! Сочные котлеты, свежие булочки и уникальные соусы. Популярное место среди молодежи и любителей качественного фаст-фуда. +7 701 000 00 30</p>
+                        <div class="place-actions">
+                            <a href="tel:+77010000030" class="btn-map-location">
+                                <div class="map-icon"></div>
+                                Посмотреть на карте
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="place-card">
+                    <div class="place-image" style="background-image: url('https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?ixlib=rb-4.0.3&auto=format&fit=crop&w=2078&q=80');">
+                        <div class="place-favorite">
+                            <svg width="20" height="18" viewBox="0 0 20 18" fill="none">
+                                <path d="M10 16.5C9.7 16.5 9.4 16.4 9.2 16.2C8.9 15.9 2 9.5 2 5.5C2 2.4 4.4 0 7.5 0C8.7 0 9.8 0.5 10.5 1.3C11.2 0.5 12.3 0 13.5 0C16.6 0 19 2.4 19 5.5C19 9.5 12.1 15.9 10.8 16.2C10.6 16.4 10.3 16.5 10 16.5Z" fill="#CBD5E1"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="place-content">
+                        <h3 class="place-title">Koktem Cafe</h3>
+                        <p class="place-description">Кофейня и десерты в уютной атмосфере. Идеальное место для встреч с друзьями или работы в спокойной обстановке. 19 мкр | +7 776 029 63 03</p>
+                        <div class="place-actions">
+                            <a href="tel:+77760296303" class="btn-map-location">
+                                <div class="map-icon"></div>
+                                Посмотреть на карте
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="place-card">
+                    <div class="place-image" style="background-image: url('https://images.unsplash.com/photo-1544148103-0773bf10d330?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');">
+                        <div class="place-favorite">
+                            <svg width="20" height="18" viewBox="0 0 20 18" fill="none">
+                                <path d="M10 16.5C9.7 16.5 9.4 16.4 9.2 16.2C8.9 15.9 2 9.5 2 5.5C2 2.4 4.4 0 7.5 0C8.7 0 9.8 0.5 10.5 1.3C11.2 0.5 12.3 0 13.5 0C16.6 0 19 2.4 19 5.5C19 9.5 12.1 15.9 10.8 16.2C10.6 16.4 10.3 16.5 10 16.5Z" fill="#CBD5E1"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="place-content">
+                        <h3 class="place-title">Barashka Dine&Drink</h3>
+                        <p class="place-description">Азербайджанская и средиземноморская кухня в стильном интерьере. Изысканные блюда, отличное вино и теплая атмосфера для незабываемого ужина. +7 700 444 07 71</p>
+                        <div class="place-actions">
+                            <a href="tel:+77004440771" class="btn-map-location">
+                                <div class="map-icon"></div>
+                                Посмотреть на карте
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="place-card">
+                    <div class="place-image" style="background-image: url('https://images.unsplash.com/photo-1571997478779-2adcbbe9ab2f?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');">
+                        <div class="place-favorite">
+                            <svg width="20" height="18" viewBox="0 0 20 18" fill="none">
+                                <path d="M10 16.5C9.7 16.5 9.4 16.4 9.2 16.2C8.9 15.9 2 9.5 2 5.5C2 2.4 4.4 0 7.5 0C8.7 0 9.8 0.5 10.5 1.3C11.2 0.5 12.3 0 13.5 0C16.6 0 19 2.4 19 5.5C19 9.5 12.1 15.9 10.8 16.2C10.6 16.4 10.3 16.5 10 16.5Z" fill="#CBD5E1"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="place-content">
+                        <h3 class="place-title">Chechil Pub</h3>
+                        <p class="place-description">Вечер с живой музыкой в уютной атмосфере паба. Отличное место для отдыха с друзьями, качественные напитки и регулярные концерты. 7а мкр | +7 707 907 60 27</p>
+                        <div class="place-actions">
+                            <a href="tel:+77079076027" class="btn-map-location">
+                                <div class="map-icon"></div>
+                                Посмотреть на карте
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Отдых с детьми -->
+        <section class="mb-16">
+            <div class="section-header">
+                <h2 class="text-3xl font-bold text-jeti-brown">👧 Отдых с детьми</h2>
+                <a href="#" class="btn-map">
+                    <div class="map-icon"></div>
+                    Посмотреть на карте
+                </a>
+            </div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="place-card">
+                    <div class="place-image" style="background-image: url('https://images.unsplash.com/photo-1544551763-77ef2d0cfc6c?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');">
+                        <div class="place-favorite">
+                            <svg width="20" height="18" viewBox="0 0 20 18" fill="none">
+                                <path d="M10 16.5C9.7 16.5 9.4 16.4 9.2 16.2C8.9 15.9 2 9.5 2 5.5C2 2.4 4.4 0 7.5 0C8.7 0 9.8 0.5 10.5 1.3C11.2 0.5 12.3 0 13.5 0C16.6 0 19 2.4 19 5.5C19 9.5 12.1 15.9 10.8 16.2C10.6 16.4 10.3 16.5 10 16.5Z" fill="#CBD5E1"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="place-content">
+                        <h3 class="place-title">My Kids</h3>
+                        <p class="place-description">Детский развлекательный центр в ТРК «Актау». Современные игровые автоматы, безопасные аттракционы и игровые зоны для детей всех возрастов. 16 мкр | +7 708 058 04 72</p>
+                        <div class="place-actions">
+                            <a href="tel:+77080580472" class="btn-map-location">
+                                <div class="map-icon"></div>
+                                Посмотреть на карте
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="place-card">
+                    <div class="place-image" style="background-image: url('https://images.unsplash.com/photo-1520637836862-4d197d17c55a?ixlib=rb-4.0.3&auto=format&fit=crop&w=2069&q=80');">
+                        <div class="place-favorite">
+                            <svg width="20" height="18" viewBox="0 0 20 18" fill="none">
+                                <path d="M10 16.5C9.7 16.5 9.4 16.4 9.2 16.2C8.9 15.9 2 9.5 2 5.5C2 2.4 4.4 0 7.5 0C8.7 0 9.8 0.5 10.5 1.3C11.2 0.5 12.3 0 13.5 0C16.6 0 19 2.4 19 5.5C19 9.5 12.1 15.9 10.8 16.2C10.6 16.4 10.3 16.5 10 16.5Z" fill="#CBD5E1"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="place-content">
+                        <h3 class="place-title">Kids Park</h3>
+                        <p class="place-description">Современный детский парк в БЦ Urban с разнообразными аттракционами и игровыми зонами. Безопасная среда для активного отдыха детей. 17 мкр | +7 700 659 05 68</p>
+                        <div class="place-actions">
+                            <a href="tel:+77006590568" class="btn-map-location">
+                                <div class="map-icon"></div>
+                                Посмотреть на карте
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="place-card">
+                    <div class="place-image" style="background-image: url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');">
+                        <div class="place-favorite">
+                            <svg width="20" height="18" viewBox="0 0 20 18" fill="none">
+                                <path d="M10 16.5C9.7 16.5 9.4 16.4 9.2 16.2C8.9 15.9 2 9.5 2 5.5C2 2.4 4.4 0 7.5 0C8.7 0 9.8 0.5 10.5 1.3C11.2 0.5 12.3 0 13.5 0C16.6 0 19 2.4 19 5.5C19 9.5 12.1 15.9 10.8 16.2C10.6 16.4 10.3 16.5 10 16.5Z" fill="#CBD5E1"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="place-content">
+                        <h3 class="place-title">Парк аттракционов Сказка</h3>
+                        <p class="place-description">Волшебный мир развлечений для всей семьи в 5а микрорайоне. Множество аттракционов, игровых площадок и сказочная атмосфера для незабываемых детских воспоминаний. +7 702 593 00 00</p>
+                        <div class="place-actions">
+                            <a href="tel:+77025930000" class="btn-map-location">
+                                <div class="map-icon"></div>
+                                Посмотреть на карте
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Активности -->
+        <section class="mb-16">
+            <div class="section-header">
+                <h2 class="text-3xl font-bold text-jeti-brown">🎯 Активности в городе</h2>
+                <a href="#" class="btn-map">
+                    <div class="map-icon"></div>
+                    Посмотреть на карте
+                </a>
+            </div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="place-card">
+                    <div class="place-image" style="background-image: url('https://images.unsplash.com/photo-1530549387789-4c1017266635?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');">
+                        <div class="place-favorite">
+                            <svg width="20" height="18" viewBox="0 0 20 18" fill="none">
+                                <path d="M10 16.5C9.7 16.5 9.4 16.4 9.2 16.2C8.9 15.9 2 9.5 2 5.5C2 2.4 4.4 0 7.5 0C8.7 0 9.8 0.5 10.5 1.3C11.2 0.5 12.3 0 13.5 0C16.6 0 19 2.4 19 5.5C19 9.5 12.1 15.9 10.8 16.2C10.6 16.4 10.3 16.5 10 16.5Z" fill="#CBD5E1"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="place-content">
+                        <h3 class="place-title">Водные виды спорта</h3>
+                        <p class="place-description">Виндсерфинг и кайтсерфинг на Каспийском море. Прокат оборудования и инструктаж для начинающих.</p>
+                        <div class="place-actions">
+                            <a href="#" class="btn-map-location">
+                                <div class="map-icon"></div>
+                                Посмотреть на карте
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="place-card">
+                    <div class="place-image" style="background-image: url('https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?ixlib=rb-4.0.3&auto=format&fit=crop&w=2069&q=80');">
+                        <div class="place-favorite">
+                            <svg width="20" height="18" viewBox="0 0 20 18" fill="none">
+                                <path d="M10 16.5C9.7 16.5 9.4 16.4 9.2 16.2C8.9 15.9 2 9.5 2 5.5C2 2.4 4.4 0 7.5 0C8.7 0 9.8 0.5 10.5 1.3C11.2 0.5 12.3 0 13.5 0C16.6 0 19 2.4 19 5.5C19 9.5 12.1 15.9 10.8 16.2C10.6 16.4 10.3 16.5 10 16.5Z" fill="#CBD5E1"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="place-content">
+                        <h3 class="place-title">Велопрогулки</h3>
+                        <p class="place-description">Прокат велосипедов и велодорожки вдоль побережья. Групповые велотуры по городу.</p>
+                        <div class="place-actions">
+                            <a href="#" class="btn-map-location">
+                                <div class="map-icon"></div>
+                                Посмотреть на карте
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="place-card">
+                    <div class="place-image" style="background-image: url('https://images.unsplash.com/photo-1587174147264-ca11d3ac2c86?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');">
+                        <div class="place-favorite">
+                            <svg width="20" height="18" viewBox="0 0 20 18" fill="none">
+                                <path d="M10 16.5C9.7 16.5 9.4 16.4 9.2 16.2C8.9 15.9 2 9.5 2 5.5C2 2.4 4.4 0 7.5 0C8.7 0 9.8 0.5 10.5 1.3C11.2 0.5 12.3 0 13.5 0C16.6 0 19 2.4 19 5.5C19 9.5 12.1 15.9 10.8 16.2C10.6 16.4 10.3 16.5 10 16.5Z" fill="#CBD5E1"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="place-content">
+                        <h3 class="place-title">Гольф-клуб</h3>
+                        <p class="place-description">18-луночное поле для гольфа с обучением для начинающих и арендой клюшек.</p>
+                        <div class="place-actions">
+                            <a href="#" class="btn-map-location">
+                                <div class="map-icon"></div>
+                                Посмотреть на карте
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="place-card">
+                    <div class="place-image" style="background-image: url('https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');">
+                        <div class="place-favorite">
+                            <svg width="20" height="18" viewBox="0 0 20 18" fill="none">
+                                <path d="M10 16.5C9.7 16.5 9.4 16.4 9.2 16.2C8.9 15.9 2 9.5 2 5.5C2 2.4 4.4 0 7.5 0C8.7 0 9.8 0.5 10.5 1.3C11.2 0.5 12.3 0 13.5 0C16.6 0 19 2.4 19 5.5C19 9.5 12.1 15.9 10.8 16.2C10.6 16.4 10.3 16.5 10 16.5Z" fill="#CBD5E1"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="place-content">
+                        <h3 class="place-title">Развлечения</h3>
+                        <p class="place-description">Боулинг, бильярд и караоке для веселого времяпрепровождения с друзьями.</p>
+                        <div class="place-actions">
+                            <a href="#" class="btn-map-location">
+                                <div class="map-icon"></div>
+                                Посмотреть на карте
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Kazakh Phrases Section -->
+    <section class="kazakh-phrases">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center mb-8">💬 Бытовые фразы на казахском</h2>
+            <div class="phrase-grid">
+                <div class="phrase-card">
+                    <div class="phrase-ru">Привет</div>
+                    <div class="phrase-kz">Сәлем!</div>
+                </div>
+                <div class="phrase-card">
+                    <div class="phrase-ru">Спасибо</div>
+                    <div class="phrase-kz">Рахмет!</div>
+                </div>
+                <div class="phrase-card">
+                    <div class="phrase-ru">Как дела?</div>
+                    <div class="phrase-kz">Қалыңыз қалай?</div>
+                </div>
+                <div class="phrase-card">
+                    <div class="phrase-ru">Все в порядке</div>
+                    <div class="phrase-kz">Барі жақсы</div>
+                </div>
+                <div class="phrase-card">
+                    <div class="phrase-ru">До свидания!</div>
+                    <div class="phrase-kz">Сау болыңыз!</div>
+                </div>
+                <div class="phrase-card">
+                    <div class="phrase-ru">До скорой встречи</div>
+                    <div class="phrase-kz">Кездескенше сау болыңыз!</div>
+                </div>
+                <div class="phrase-card">
+                    <div class="phrase-ru">Сколько стоит?</div>
+                    <div class="phrase-kz">Бағасы қанша?</div>
+                </div>
+                <div class="phrase-card">
+                    <div class="phrase-ru">Где пляж?</div>
+                    <div class="phrase-kz">Жағажай қайда?</div>
+                </div>
+                <div class="phrase-card">
+                    <div class="phrase-ru">Да</div>
+                    <div class="phrase-kz">Иә</div>
+                </div>
+                <div class="phrase-card">
+                    <div class="phrase-ru">Нет</div>
+                    <div class="phrase-kz">Жоқ</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-jeti-brown text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-2 gap-8 items-center">
+                <div>
+                    <h3 class="text-2xl font-bold mb-4">🌊 ОТКРОЙТЕ ВКУС АКТАУ С JETI</h3>
+                    <p class="text-jeti-sand mb-4">Ваш гастрономический ориентир в городе — ресторан JETI. Свежие морепродукты, локальные блюда, уют у моря.</p>
+                    <div class="text-sm text-jeti-sand space-y-1">
+                        <p>📍 30 микрорайон | ☎️ +7 701 934 44 24</p>
+                        <p>📱 @jeti.aktau</p>
+                        <p class="font-semibold text-yellow-300">🎫 Покажите этот сайт — получите скидку 10%!</p>
+                    </div>
+                </div>
+                <div class="text-center md:text-right">
+                    <a href="index.html" class="bg-jeti-light-brown hover:bg-jeti-sand text-white hover:text-jeti-brown px-6 py-3 rounded-lg font-semibold transition-colors mb-4 inline-block">
+                        🏠 На главную
+                    </a>
+                    <div class="text-xs text-jeti-sand">
+                        <p>#visitaktau #onlyinaktau</p>
+                        <p class="mt-2">🧭 ПАМЯТКА ТУРИСТА: АКТАУ</p>
+                        <p>Город солнца, моря и невероятных пейзажей</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="navbar-loader.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
